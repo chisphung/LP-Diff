@@ -157,8 +157,8 @@ if __name__ == "__main__":
                                 np.concatenate((lr1_img, lr2_img, lr3_img, sr_img, hr_img), axis=1)
                             )
 
-                    avg_psnr = avg_psnr / idx
-                    avg_val_loss = avg_val_loss / idx
+                        avg_psnr = avg_psnr / idx
+                        avg_val_loss = avg_val_loss / idx
                     if avg_val_loss < best_loss and avg_psnr < best_psnr:
                         best_loss = avg_val_loss
                         diffusion.save_best_loss(current_epoch, current_step)

@@ -16,7 +16,7 @@
         "train": {
             "name": "LRLPR",
             "mode": "LRLPR", 
-            "dataroot": "/home/locth/omni2rect_DEIM/LRLPR",
+            "dataroot": "../LRLPR",
             "width": 224,
             "height": 112,
             "batch_size": 10,
@@ -27,7 +27,7 @@
             "mode": "LRLPR",
             "width": 224,
             "height": 112,
-            "dataroot": "/home/locth/omni2rect_DEIM/LRLPR"
+            "dataroot": "../LRLPR"
         }
     },
     "model": {

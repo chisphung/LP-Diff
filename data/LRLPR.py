@@ -15,16 +15,8 @@ class LRLPRDataset(Dataset):
         height = opt['height']
         width = opt['width']
 
-        # Map phase 'val' to 'test' if test exists and val doesn't
-        data_phase = 'test' if phase == 'val' else phase
-        
-        self.dataroot = os.path.join(opt['dataroot'], data_phase)
-        
-        # We need to find all track folders, assuming they are inside Scenario-*/region/
-        self.tracks = glob(os.path.join(self.dataroot, '*', '*', 'track_*'))
-        if not self.tracks:
-            # Fallback to recursive search
-            self.tracks = glob(os.path.join(self.dataroot, '**', 'track_*'), recursive=True)
+        self.dataroot = os.path.join(opt['dataroot'], 'train')
+        self.tracks = sorted(glob(os.path.join(self.dataroot, '*', '*', 'track_*')))
             
         self.samples = []
         for track in self.tracks:
@@ -52,6 +44,16 @@ class LRLPRDataset(Dataset):
                         'hr': hr_file,
                         'lrs': lrs
                     })
+
+        split_idx = int(len(self.samples) * 0.95)
+        if phase == 'train':
+            self.samples = self.samples[:split_idx]
+        elif phase == 'val':
+            self.samples = self.samples[split_idx:]
+            
+        data_len = opt.get('data_len', -1) if isinstance(opt, dict) else getattr(opt, 'data_len', -1)
+        if data_len > 0:
+            self.samples = self.samples[:data_len]
                     
         self.transform_fn1 = aug.get_transforms(size=(height, width))
         self.transform_fn2 = aug.get_transforms(size=(height, width))
@@ -118,7 +120,7 @@ def create_dataset(opt):
 if __name__ == '__main__':
     class DummyOpt:
         def __init__(self):
-            self.dataroot = r'/home/locth/omni2rect_DEIM/LRLPR'
+            self.dataroot = r'../LRLPR'
             self.mode = 'train'
             self.batch_size = 2
             self.num_threads = 0
@@ -129,7 +131,7 @@ if __name__ == '__main__':
             return getattr(self, key)
             
     opt = DummyOpt()
-    dataset = LRLPRDataset(opt, 'train')
+    dataset = LRLPRDataset(opt, 'val')
     if len(dataset) > 0:
         data = dataset[0]
         print("LR1 shape:", data['LR1'].shape)
