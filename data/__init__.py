@@ -24,7 +24,12 @@ def create_dataloader(dataset, dataset_opt, phase):
 def create_dataset(dataset_opt, phase):
     """create dataset"""
     mode = dataset_opt['mode']
-    from data.LRHR import LRHRDataset as D
+    if mode == 'LRHR':
+        from data.LRHR import LRHRDataset as D
+    elif mode == 'LRLPR':
+        from data.LRLPR import LRLPRDataset as D
+    else:
+        raise NotImplementedError('Dataset [{:s}] is not recognized.'.format(mode))
     # dataset = D(dataroot=dataset_opt['dataroot'],
     #             datatype=dataset_opt['datatype'],
     #             l_resolution=dataset_opt['l_resolution'],
