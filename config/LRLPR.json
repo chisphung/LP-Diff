@@ -19,7 +19,7 @@
             "dataroot": "../LRLPR",
             "width": 224,
             "height": 112,
-            "batch_size": 10,
+            "batch_size": 20,
             "num_workers": 0
         },
         "val": {
